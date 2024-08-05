@@ -1,16 +1,16 @@
 #include "Oware.hpp"
-#include <iostream>
-#include <vector>
-#include <algorithm>
 Oware::Oware(){
-
+    std::array<int,12> startingState = {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
+    GameState gameState(startingState, 0, 0);
+    gameLogic = GameLogic(gameState);
 }
 
 void Oware::play(){
-    while(!GameLogic.isGameOver()){
-        std::cout << "Player 1 to move" << std::endl;
+    while(!gameLogic.isGameOver()){
+        std::vector<uint8_t> legalMoves;
 
-        std::vector<int> legalMoves = GameLogic.getLegalMoves();
+        std::cout << "Player 1 to move" << std::endl;
+        legalMoves = gameLogic.getLegalMoves(1);
         int chosenMove;
         std::cin >> chosenMove;
         
@@ -18,15 +18,17 @@ void Oware::play(){
             std::cout << "Illegal Move\n";
             std::cin >> chosenMove;
         }
-        GameLogic.move(chosenMove, 1);
+        gameLogic.move(chosenMove, 1);
 
         std::cout << "Player 2 to move" << std::endl;
-
+        legalMoves = gameLogic.getLegalMoves(2);
         while (std::find(legalMoves.begin(), legalMoves.end(), chosenMove) == legalMoves.end()){
             std::cout << "Illegal Move\n";
             std::cin >> chosenMove;
         }
-        GameLogic.move(chosenMove, 2);
+        gameLogic.move(chosenMove, 2);
+
+        gameLogic.checkGameOver();
 
     }
 }

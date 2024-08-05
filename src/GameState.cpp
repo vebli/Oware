@@ -1,5 +1,4 @@
-#include "game_state.hpp"
-#include <cassert>
+#include "GameState.hpp"
 GameState::GameState(std::array<int, 12>& State, int Player1Captures, int Player2Captures){
     setState(State);
     player1Captures = Player1Captures;
@@ -52,3 +51,14 @@ void GameState::print(){
         }
     }
 
+int GameState::getSeeds(uint8_t pit, uint8_t player){
+    if(player == 1){
+        return state[pit - 1];
+    }
+    else if(player == 2){
+        return state[pit + 5];
+    }
+    else {
+        return -1;
+    }
+};

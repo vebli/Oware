@@ -1,5 +1,6 @@
 #include "Oware.hpp"
 int main(){
-    Oware Oware;
+    Oware oware;
+    oware.play();
 }
 
