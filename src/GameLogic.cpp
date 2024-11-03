@@ -5,17 +5,19 @@ GameLogic::GameLogic(GameState gameState) : gameState(gameState){}
 void GameLogic::print(){
     gameState.print();
 }
-int GameLogic::getSeeds(int player, int pit){
+int GameLogic::getIndex(int player, int pit){
+    int result = -1;
     if(player == 1){
-        return gameState.getSeeds(pit-1);
+        result = pit-1;
     }
     else if(player == 2){
-        return gameState.getSeeds(pit+5);
+        result = pit+5;
     }
-    else {
-        std::cerr << "GameLogic::getSeeds expects player 1 or 2";
-        std::exit(EXIT_FAILURE);
-    }
+    assert(result >= 0);
+    return result;
+}
+int GameLogic::getSeeds(int player, int pit){
+    return gameState.getSeeds(getIndex(player, pit));
 }
 void GameLogic::setSeeds(int player, int pit, int amount){
     assert(pit <= 6);
@@ -26,7 +28,8 @@ void GameLogic::setSeeds(int player, int pit, int amount){
         gameState.setSeeds(pit+5, amount);
     }
 }
-void GameLogic::move(int pit){
+void GameLogic::move(int player, int pit){
+    pit = getIndex(player, pit);
     int seeds = gameState.getSeeds(pit);
     int laps = seeds/12;
     int remainder = seeds % 12;
@@ -48,64 +51,54 @@ void GameLogic::move(int pit){
     }
 }
 
+
 bool GameLogic::hasEmptyField(int player){
     bool hasEmptyField = true;
-    for(int i = 1; i <= 6; i++){
-        if(getSeeds(i, player)){
+    int i = 1;
+    while(i <= 6 && hasEmptyField){
+        if(getSeeds(player, i) != 0){
             hasEmptyField = false;
         }
+        i++;
     }
     return hasEmptyField;
 } 
 bool GameLogic::reachesOponent(int player, int pit){
-    if(getSeeds(pit,player) > 6 - pit){
+    if(getSeeds(player, pit) >= 7 - pit){
         return true;
     }
     return false;
 }
-bool GameLogic::checkGameOver(){
-    for (int i = 1; i < 6; i++){
-        reachesOponent(i, 1);
-    }
-    for (int i = 1; i < 6; i++){
-        reachesOponent(i, 2);
+bool GameLogic::checkGameOver(int player){
+    bool result = true;
+    int i = 1;
+    while(i <= 6 && result){
+        if(reachesOponent(player, i)){
+            result = false;
+        }
+        i++;
     }
     return true;
 }
 std::vector<int> GameLogic::getForcedMoves(int player){
-    bool hasEmptyField = true;
+    std::vector<int> forcedMoves;
+    int opponent = player ^ 3;
+    if(!hasEmptyField(opponent)){
+        return forcedMoves;
+    }
     for(int i = 1; i <= 6; i++){
-        if(getSeeds(i, player)){
-            hasEmptyField = false;
+        if(reachesOponent(player, i)){
+            forcedMoves.push_back(i);
         }
     }
-    if(hasEmptyField){
-
-    }
-
-    std::vector<int> legalMoves;
-    if (player == 1){
-        for(int i = 1; i <= 6; i++){
-            if(reachesOponent(i, 1)){
-                legalMoves.push_back(i);
-            }
-        }
-    }
-    else if (player == 2){
-        for(int i = 1; i <= 6; i++){
-            if(reachesOponent(i, 1)){
-                legalMoves.push_back(i);
-            }
-        }
-    }
-    return legalMoves;
+    return forcedMoves;
 }
 
 std::vector<int> GameLogic::getLegalMoves(int player){
     std::vector<int> legalMoves = getForcedMoves(player);
     if(legalMoves.empty() == true){
-        for(int i = 1; i < 6; i++){
-            if(getSeeds(i, player) != 0){
+        for(int i = 1; i <= 6; i++){
+            if(getSeeds(player, i) != 0){
                 legalMoves.push_back(i);
             }
         }
