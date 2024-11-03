@@ -15,7 +15,7 @@
       pkgs = mkPkgs system;
     in {
       default = pkgs.stdenv.mkDerivation {
-        name = "Oware-Life";
+        name = "Oware";
         src = ./.;
         buildInputs = with pkgs; [
           gcc
