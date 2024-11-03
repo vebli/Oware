@@ -1,13 +1,13 @@
 #include "Oware.hpp"
 Oware::Oware(){
-    std::array<int,12> startingState = {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
-    GameState gameState(startingState, 0, 0);
+    std::array<int,14> startingState = {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0};
+    GameState gameState(startingState);
     gameLogic = GameLogic(gameState);
 }
 
 void Oware::play(){
     while(!gameLogic.isGameOver()){
-        std::vector<uint8_t> legalMoves;
+        std::vector<int> legalMoves;
 
         std::cout << "Player 1 to move" << std::endl;
         legalMoves = gameLogic.getLegalMoves(1);

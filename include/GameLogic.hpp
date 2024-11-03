@@ -1,23 +1,28 @@
 #pragma once
 #include "GameState.hpp"
 #include <vector>
+#include <cassert>
 
 class GameLogic {
 public:
-    GameLogic();
-    GameLogic(GameState& State);
+    GameLogic(GameState State);
+
+    int getSeeds(int player, int pit);
+    void setSeeds(int player, int pit, int amount);
+
     void print();
-    void move(uint8_t pit, uint8_t player);
-    bool isLegalMove(uint8_t pit, uint8_t player);
+    void move(int pit);
+    bool isLegalMove(int player, int pit);
     bool checkGameOver();
-    std::vector<uint8_t> getLegalMoves(uint8_t player);
+    std::vector<int> getLegalMoves(int player);
     std::vector<GameState> findChildren();
     bool isGameOver();
     
 private:
-    bool reachesOponent(uint8_t pit, uint8_t player);
-    bool hasEmptyField(uint8_t player);
-    bool canGiveToOponent(uint8_t player); 
-    std::vector<uint8_t> getForcedMoves(uint8_t player);
+    bool capture(int start, int stop);
+    bool reachesOponent(int player, int pit);
+    bool hasEmptyField(int player);
+    bool canGiveToOponent(int player); 
+    std::vector<int> getForcedMoves(int player);
     GameState gameState;
 };

@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/main.cpp
-    ${CMAKE_SOURCE_DIR}/src/Oware.cpp
+    # ${CMAKE_SOURCE_DIR}/src/Oware.cpp
     ${CMAKE_SOURCE_DIR}/src/GameState.cpp
     ${CMAKE_SOURCE_DIR}/src/GameLogic.cpp
 )

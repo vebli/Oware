@@ -1,64 +1,58 @@
 #include "GameState.hpp"
-GameState::GameState(std::array<int, 12>& State, int Player1Captures, int Player2Captures){
-    setState(State);
-    player1Captures = Player1Captures;
-    player2Captures = Player2Captures;
-    boardTemplate = {
-        "|----|-----------------------------|----|",
-        "|    | s  | s  | s  | s  | s  | s  |    |",
-        "| c  |-----------------------------| c  |",
-        "|    | s  | s  | s  | s  | s  | s  |    |",
-        "|----|-----------------------------|----|"
-    };
+GameState::GameState(std::array<int, 14>& State){
+    setState(State); 
 }
-void GameState::setState(std::array<int, 12>& newState){
+void GameState::setState(std::array<int, 14>& newState){
     state = newState;
 } 
-void GameState::print(){
-        std::vector<std::string> board = boardTemplate;
-        int currentPit = 0;
-        int currentCapturePit = 0;
-        for(int i = 0; i < board.size(); i++){
-            for(int j = 0; j < board[i].size(); j++){
-                std::string seedCount_str = std::to_string(state[currentPit]);
-                if(board[i][j] == 's'){
-                    for(int k = 0; k < seedCount_str.size(); k++){
-                        board[i][j+k] = seedCount_str[k];
-                    }
-                        assert(currentPit<= 13);
-                        currentPit++;
-                }
-                else if(board[i][j] == 'c'){
-                    if(currentCapturePit == 0){
-                    std::string captures_str = std::to_string(player1Captures);
-                        for(int l = 0; l < captures_str.size(); l++){
-                            board[i][j+l] = captures_str[l];
-                        }
-                        currentCapturePit = 1;
-                    }
-                    else if (currentCapturePit == 1){
-                        std::string captures_str = std::to_string(player2Captures);
-                        for(int l = 0; l < captures_str.size(); l++){
-                            board[i][j+l] = captures_str[l];
-                        }
-                    }
 
-                };
-            };
+// There must be two rows and 6 "s" must be in one row.
+// Could be improved with multiple "s" being placeholder for digits
+void GameState::print(){ 
+    auto board = boardTemplate;
+    int state_index = 0;
+    int captures_index = 12;
+    int index_capture_row = 2;
+    int index_player1_row = 3;
+    int inedx_player2_row = 1;
+    auto replace_with_state = [this](int& index, char* ch){
+        std::string str = std::to_string(this->state[index]);
+        for(int l = 0; l < str.length(); l++){
+            *(ch+l) = str[l]; 
         }
-        for (auto row : board){
-            std::cout << row << "\n";
+        index++;
+    };
+        std::string& player1_row = board[index_player1_row];
+        for(int i = 0; i < player1_row.size(); i++){
+            if(player1_row[i] == 's'){
+                replace_with_state(state_index, &player1_row[i]);
+            }
         }
-    }
 
-int GameState::getSeeds(uint8_t pit, uint8_t player){
-    if(player == 1){
-        return state[pit - 1];
-    }
-    else if(player == 2){
-        return state[pit + 5];
-    }
-    else {
-        return -1;
+        std::string& player2_row = board[inedx_player2_row];
+        for(int i = player2_row.size() - 1; i >= 0; i--){
+            if(player2_row[i] == 's'){
+                replace_with_state(state_index, &player2_row[i]);
+            }
+        }
+
+        std::string& capture_row = board[index_capture_row];
+        for(int i = 0; i < capture_row.size(); i++){
+            if(capture_row[i] == 'c'){
+                replace_with_state(captures_index, &capture_row[i]);
+            }
+        }
+
+    for(auto row : board){
+        for(auto ch : row){
+            std::cout << ch;
+        }
+        std::cout << "\n";
     }
 };
+int GameState::getSeeds(int pit){
+    return state[pit];
+};
+void GameState::setSeeds(int pit, int seeds){
+    state[pit] = seeds;
+}
