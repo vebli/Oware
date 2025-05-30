@@ -1,15 +1,6 @@
 #pragma once
-#include "GameLogic.hpp"
-#include <array>
-#include <cstdint>
-#include <iostream>
-#include <vector>
-#include <algorithm>
 
-class Oware {
-public:
-    Oware();
-    void play();
-private:
-    GameLogic gameLogic;
+namespace Oware {
+    void play_local_multiplayer();
+    void play_singleplayer();
 };

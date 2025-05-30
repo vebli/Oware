@@ -1,16 +1,17 @@
 #include "Oware.hpp"
-Oware::Oware(){
-    std::array<int,14> startingState = {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0};
-    GameState gameState(startingState);
-    gameLogic = GameLogic(gameState);
-}
+#include "GameLogic.hpp"
+#include <algorithm>
+#include <iostream>
 
-void Oware::play(){
-    while(!gameLogic.isGameOver()){
+
+void Oware::play_local_multiplayer(){
+     GameState gameState({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
+
+    while(true){
         std::vector<int> legalMoves;
 
         std::cout << "Player 1 to move" << std::endl;
-        legalMoves = gameLogic.getLegalMoves(1);
+        legalMoves = getLegalMoves(gameState, player1);
         int chosenMove;
         std::cin >> chosenMove;
         
@@ -18,18 +19,33 @@ void Oware::play(){
             std::cout << "Illegal Move\n";
             std::cin >> chosenMove;
         }
-        gameLogic.move(chosenMove, 1);
+
+        move(gameState, player1, chosenMove);
+        print_board(gameState);
+        if(checkGameOver(gameState, player1)){ break; };
 
         std::cout << "Player 2 to move" << std::endl;
-        legalMoves = gameLogic.getLegalMoves(2);
+        legalMoves = getLegalMoves(gameState, player2);
+        std::cin >> chosenMove;
+
         while (std::find(legalMoves.begin(), legalMoves.end(), chosenMove) == legalMoves.end()){
             std::cout << "Illegal Move\n";
             std::cin >> chosenMove;
         }
-        gameLogic.move(chosenMove, 2);
 
-        gameLogic.checkGameOver();
+        move(gameState, player2, chosenMove);
+        print_board(gameState);
+        if(checkGameOver(gameState, player2)){ break; };
 
+    }
+    if(gameState.getScore(player1) > gameState.getScore(player2)){
+        std::cout << "Player 1 Won\n";
+    }
+    else if (gameState.getScore(player1) < gameState.getScore(player2)){
+        std::cout << "Player 2 Won\n";
+    }
+    else {
+        std::cout << "Draw\n";
     }
 }
 
