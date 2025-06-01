@@ -13,6 +13,7 @@ public:
   void setState(Board newState);
 
   void setScore(int player, int val);
+  void addToScore(int player, int val);
   int getScore(int player) const;
 
 private:

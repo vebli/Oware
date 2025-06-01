@@ -18,3 +18,7 @@ int GameState::getScore(int player) const {
     assert(player >= 0 && player < 2);
     return score[player];
 };
+
+void GameState::addToScore(int player, int val){
+    score[player] += val;
+};

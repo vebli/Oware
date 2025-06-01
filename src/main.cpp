@@ -5,10 +5,12 @@
 #include <array>
 int main(){
     Oware::play_local_multiplayer();
-    // Board startingState = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-    // GameState gamestate(startingState, {12, 13});
+    // Board startingState = {5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2};
+    // Board startingState = {2, 2, 2, 10, 2, 2, 5, 5, 5, 5, 5, 5};
+    // GameState gamestate(startingState, {10, 10});
     // print_board(gamestate);
-    // move(gamestate, player1, 3);
+    // move(gamestate, player2, 6);
+    // print_board(gamestate);
     // print_board(gamestate);
     // std::vector<int> legalMoves = gamelogic.getLegalMoves(player2);
     // for(auto move: legalMoves){

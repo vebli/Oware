@@ -10,6 +10,8 @@ void Oware::play_local_multiplayer(){
     while(true){
         std::vector<int> legalMoves;
 
+        print_board(gameState);
+
         std::cout << "Player 1 to move" << std::endl;
         legalMoves = getLegalMoves(gameState, player1);
         int chosenMove;
@@ -19,11 +21,10 @@ void Oware::play_local_multiplayer(){
             std::cout << "Illegal Move\n";
             std::cin >> chosenMove;
         }
-
         move(gameState, player1, chosenMove);
-        print_board(gameState);
         if(checkGameOver(gameState, player1)){ break; };
 
+        print_board(gameState);
         std::cout << "Player 2 to move" << std::endl;
         legalMoves = getLegalMoves(gameState, player2);
         std::cin >> chosenMove;
@@ -34,7 +35,6 @@ void Oware::play_local_multiplayer(){
         }
 
         move(gameState, player2, chosenMove);
-        print_board(gameState);
         if(checkGameOver(gameState, player2)){ break; };
 
     }

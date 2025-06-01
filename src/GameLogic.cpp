@@ -74,25 +74,52 @@ void print_board(const GameState &s) {
 
 void move(GameState& gameState, const int player, const int pit){
     const int pit_index = getIndex(player, pit);
-    int seeds = gameState.getSeeds(pit_index);
-    int laps = seeds/12;
-    int remainder = seeds % 12;
+    const int seeds = gameState.getSeeds(pit_index);
+    const int laps = seeds/12;
+    const int remainder = seeds % 12;
     int current_pit;
+    int new_seed_count;
+    int streak = 0;
 
-    for(int i = 0; i < 12; i++){
+    gameState.setSeeds(pit_index, laps);
+    for(int i = 1; i < 12; i++){
         current_pit = (pit_index + i) % 12;
-        int new_seed_count;
-        if(current_pit == pit_index){
-            new_seed_count = laps;
-        }
-        else{
-            new_seed_count = gameState.getSeeds(current_pit) + laps;
-            if(i <= remainder){
-                new_seed_count++;
+        new_seed_count = gameState.getSeeds(current_pit) + laps;
+        if(i <= remainder){
+            new_seed_count++;
+
+            if(player == player1 ){
+                if(current_pit > 5 && (new_seed_count == 3 || new_seed_count == 2)){
+                    streak++;
+                }
+                else{
+                    streak = 0;
+                }
             }
-        }
+            else if (player == player2){
+                if(current_pit <= 5 && (new_seed_count == 3 || new_seed_count == 2)){
+                    streak++;
+                }
+                else{
+                    streak = 0;
+                }
+            }
+        } 
         gameState.setSeeds(current_pit, new_seed_count);
     }
+
+    assert(streak <= 6);
+
+    int captured = 0;
+
+    for(int i = 0; i < streak; i++){
+        current_pit = (pit_index + remainder) % 12 - i;
+        captured += gameState.getSeeds(current_pit);
+        gameState.setSeeds(current_pit , 0);
+    }
+
+    gameState.addToScore(player, captured);
+
 }
 
 
