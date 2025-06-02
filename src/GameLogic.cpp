@@ -134,18 +134,6 @@ bool reachesOpponent(const GameState &s, const int player, const int pit){
     return false;
 }
 
-bool checkGameOver(const GameState &s, const int player){
-    bool result = true;
-    int i = 1;
-    while(i <= 6 && result){
-        if(reachesOpponent(s, player, i)){
-            result = false;
-        }
-        i++;
-    }
-    return result;
-}
-
 std::vector<int> getForcedMoves(const GameState &s, const int player){
     std::vector<int> forcedMoves;
     const int opponent = player ^ 1;

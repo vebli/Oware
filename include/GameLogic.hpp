@@ -13,10 +13,8 @@ void print();
 void move(GameState& gameState, const int player, const int pit);
 
 bool isLegalMove(int player, int pit);
-bool checkGameOver(const GameState &s, const int player);
 std::vector<int> getLegalMoves(const GameState &s, const int player);
 std::vector<GameState> findChildren();
-bool isGameOver();
 
 int getIndex(int player, int pit);
 bool capture(int start, int stop);
