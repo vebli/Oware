@@ -2,5 +2,5 @@
 
 namespace Oware {
     void play_local_multiplayer();
-    void play_singleplayer();
+    void play_singleplayer(int difficulty);
 };

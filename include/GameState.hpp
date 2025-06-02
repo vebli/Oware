@@ -6,6 +6,7 @@ using Board = std::array<int , 12>;
 class GameState {
 public:
   GameState();
+  GameState(const GameState &s);
   GameState(Board s, std::array<int, 2> Score);
   int getSeeds(int pit) const;
 

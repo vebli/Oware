@@ -4,6 +4,10 @@
 // There must be two rows and 6 "s" must be in one row.
 // Could be improved with multiple "s" being placeholder for digits
 GameState::GameState(Board s, std::array<int, 2> Score): state(s), score(Score) {}
+GameState::GameState(const GameState &s){
+    state = s.state;
+    score = s.score;
+};
 int GameState::getSeeds(int pit) const { 
     return state[pit];
 };

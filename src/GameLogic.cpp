@@ -1,7 +1,12 @@
 #include "GameLogic.hpp"
+#include "GameState.hpp"
+#include <array>
 #include <cassert>
+#include <climits>
 #include <cstdlib>
 #include <iostream>
+#include <algorithm>
+#include <limits>
 
 
 const std::vector<std::string> boardTemplate = {
@@ -18,7 +23,7 @@ inline int getIndex(int player, int pit) {
     } else if (player == player2) {
         result = pit + 5;
     }
-    assert(result >= 0);
+    // assert(result >= 0);
     return result;
 }
 
@@ -114,17 +119,13 @@ void move(GameState& gameState, const int player, const int pit){
     }
 }
 
-
-bool hasEmptyField(GameState s, const int player){
-    bool hasEmptyField = true;
-    int i = 1;
-    while(i <= 6 && hasEmptyField){
+bool hasEmptyField(const GameState &s, const int player){
+    for(int i = 1; i <= 6; i++){
         if(s.getSeeds(getIndex(player, i)) != 0){
-            hasEmptyField = false;
+            return false;
         }
-        i++;
     }
-    return hasEmptyField;
+    return true;
 }
 
 bool reachesOpponent(const GameState &s, const int player, const int pit){
@@ -160,3 +161,106 @@ std::vector<int> getLegalMoves(const GameState &s, const int player){
     return legalMoves;
 }
 
+bool play_turn(GameState &s, const int player){
+    std::vector<int> legalMoves;
+
+    legalMoves = getLegalMoves(s, player);
+
+    if(legalMoves.empty()){ 
+        int opponent = player ^ 1;
+        int left_over = 0;
+        for(int i = 1; i <= 6; i++){
+            left_over += s.getSeeds(getIndex(opponent, i));
+            s.setSeeds(getIndex(opponent, i), 0);
+        }
+        s.addToScore(player, left_over);
+        return false;
+    }
+
+    if(s.getScore(player) >= 25){
+        return false;
+    }
+    int chosenMove;
+
+    while(true){
+        std::cin >> chosenMove;
+        if (std::cin.fail()){
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Illegal Move.\n";
+        }
+        else {
+            break;
+        }
+    }
+
+    while (std::find(legalMoves.begin(), legalMoves.end(), chosenMove) == legalMoves.end()){
+        std::cout << "Illegal Move\n";
+        std::cin >> chosenMove;
+    }
+
+    move(s, player, chosenMove);
+    return true;
+};
+
+
+int minimax(const GameState s, int depth, int player){
+    if(depth == 0) { 
+        int max_player_score = s.getScore(player);
+        int min_player_score = s.getScore(player ^ 1);
+        if (max_player_score >= 25 && min_player_score < 25){
+            return 1;
+        }
+        else if (max_player_score < 25 && min_player_score >= 25){
+            return -1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+    if(player) {
+        int max = INT_MIN;
+        const int opponent = player ^ 1;
+
+        for (auto curr_move : getLegalMoves(s, player)){
+            GameState child(s);
+            move(child, player, curr_move);
+            max = std::max(minimax(child, depth-1, opponent), max);
+        }
+        return max;
+    }
+    else {
+        int min = INT_MAX;
+        const int opponent = player ^ 1;
+
+        for (auto curr_move : getLegalMoves(s, player)){
+            GameState child(s);
+            move(child, player, curr_move);
+            min = std::min(minimax(child, depth-1, opponent), min);
+        }
+        return min;
+    }
+}
+
+int get_best_move(const GameState& s, int depth, int player) {
+    int bestScore = player ? INT_MIN : INT_MAX;
+    int bestMove = -1;
+    const int opponent = player ^ 1;
+
+    for (int curr_move : getLegalMoves(s, player)) {
+        GameState child(s);
+        move(child, player, curr_move);
+        int score = minimax(child, depth - 1, opponent);
+
+        if (player && score > bestScore) {
+            bestScore = score;
+            bestMove = curr_move;
+        } else if (!player && score < bestScore) {
+            bestScore = score;
+            bestMove = curr_move;
+        }
+    }
+
+    return bestMove;
+}
