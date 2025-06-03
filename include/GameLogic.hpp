@@ -22,6 +22,6 @@ bool reachesOpponent(GameState &s, const int player, const int pit);
 bool hasEmptyField(const GameState &s, const int player);
 bool canGiveToOpponent(GameState &s, int player); 
 std::vector<int> getForcedMoves(GameState &s, int player);
-bool play_turn(GameState &s, int player);
+bool player_turn(GameState &s, int player);
 int minimax(const GameState s, int depth, int player);
-int get_best_move(const GameState& s, int depth, int player); 
+int get_best_move(const GameState& s, const int depth, const int player); 

@@ -1,8 +1,10 @@
 #include "GameState.hpp"
 #include <cassert>
 
-// There must be two rows and 6 "s" must be in one row.
-// Could be improved with multiple "s" being placeholder for digits
+GameState::GameState(){
+    state = {};
+    score = {};
+}
 GameState::GameState(Board s, std::array<int, 2> Score): state(s), score(Score) {}
 GameState::GameState(const GameState &s){
     state = s.state;

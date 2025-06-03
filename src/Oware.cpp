@@ -17,12 +17,12 @@ void Oware::play_local_multiplayer(){
         system("clear");
         print_board(gameState);
         std::cout << "Player 1" << "\'s turn\n"; 
-         if(!play_turn(gameState, player1)){ break; };
+        if(gameState.getScore(player1) >= 25 || !player_turn(gameState, player1)){ break; };
 
         system("clear");
         print_board(gameState);
-        std::cout << "Player 1" << "\'s turn\n"; 
-         if(!play_turn(gameState, player2)){ break; };
+        std::cout << "Player 2" << "\'s turn\n"; 
+         if(gameState.getScore(player1) >= 25 || !player_turn(gameState, player2)){ break; };
      }
 
     print_board(gameState);
@@ -39,6 +39,7 @@ void Oware::play_local_multiplayer(){
 }
 
 void Oware::play_singleplayer(int difficulty){
+    //TODO: score win condition
     GameState gameState({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
     constexpr int com = player2;
     constexpr int player = player1;
@@ -47,14 +48,14 @@ void Oware::play_singleplayer(int difficulty){
         print_board(gameState);
         std::cout << "Your " << "turn: "; 
 
-        if(!play_turn(gameState, player)){ break; };
-        system("clear");
+        if(gameState.getScore(player) >= 25 || !player_turn(gameState, player)){ break; };
+        // system("clear");
         print_board(gameState);
-        int best_move = get_best_move(gameState, difficulty, player);
+        int best_move = get_best_move(gameState, difficulty, com);
         std::cout << "COM\'s " << "turn: "; 
-        std::cout << best_move << '\n';
 
-        if(best_move == -1){ break; }
+        if(best_move == -1 || gameState.getScore(com) >= 25){ break; }
+        std::cout << best_move << '\n';
         move(gameState, com, best_move);
     }
 }

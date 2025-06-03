@@ -137,14 +137,25 @@ bool reachesOpponent(const GameState &s, const int player, const int pit){
 
 std::vector<int> getForcedMoves(const GameState &s, const int player){
     std::vector<int> forcedMoves;
+    std::vector<int> special_cases; 
     const int opponent = player ^ 1;
     if(!hasEmptyField(s, opponent)){
         return forcedMoves;
     }
     for(int i = 1; i <= 6; i++){
         if(reachesOpponent(s, player, i)){
-            forcedMoves.push_back(i);
+            if(s.getSeeds(getIndex(player, i)) % 12 == 12 - i){
+            /*
+            Moves that capture all the seeds given to the opponent leaving him starved anyway.
+            Only allowed if no other moves are playable 
+            */
+                special_cases.push_back(i);
+            }
+            else { forcedMoves.push_back(i); }
         }
+    }
+    if(forcedMoves.empty()){
+        return special_cases;
     }
     return forcedMoves;
 }
@@ -161,11 +172,13 @@ std::vector<int> getLegalMoves(const GameState &s, const int player){
     return legalMoves;
 }
 
-bool play_turn(GameState &s, const int player){
+
+//POST: Gets user input and plays turn, returns true if move was played and false if no legal moves can be played
+bool player_turn(GameState &s, const int player){
     std::vector<int> legalMoves;
 
-    legalMoves = getLegalMoves(s, player);
 
+    legalMoves = getLegalMoves(s, player);
     if(legalMoves.empty()){ 
         int opponent = player ^ 1;
         int left_over = 0;
@@ -177,9 +190,7 @@ bool play_turn(GameState &s, const int player){
         return false;
     }
 
-    if(s.getScore(player) >= 25){
-        return false;
-    }
+    
     int chosenMove;
 
     while(true){
@@ -243,7 +254,7 @@ int minimax(const GameState s, int depth, int player){
     }
 }
 
-int get_best_move(const GameState& s, int depth, int player) {
+int get_best_move(const GameState& s, const int depth, const int player) {
     int bestScore = player ? INT_MIN : INT_MAX;
     int bestMove = -1;
     const int opponent = player ^ 1;
@@ -263,4 +274,12 @@ int get_best_move(const GameState& s, int depth, int player) {
     }
 
     return bestMove;
+}
+
+bool ai_turn(GameState &s, const int depth, const int com){
+    int best_move = get_best_move(s, depth, com);
+    if(s.getScore(com) >= 25 || best_move == -1){
+        return false;
+    }
+    return true;
 }
