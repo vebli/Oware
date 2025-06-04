@@ -11,26 +11,26 @@
 // }
 
 void Oware::play_local_multiplayer(){
-     GameState gameState({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
+     GameState s({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
 
      while(true){
         system("clear");
-        print_board(gameState);
+        print_board(s);
         std::cout << "Player 1" << "\'s turn\n"; 
-        if(gameState.getScore(player1) >= 25 || !player_turn(gameState, player1)){ break; };
+        if(!player_turn(s, player1)){ break; };
 
         system("clear");
-        print_board(gameState);
+        print_board(s);
         std::cout << "Player 2" << "\'s turn\n"; 
-         if(gameState.getScore(player1) >= 25 || !player_turn(gameState, player2)){ break; };
+         if(!player_turn(s, player2)){ break; };
      }
 
-    print_board(gameState);
+    print_board(s);
 
-    if(gameState.getScore(player1) > gameState.getScore(player2)){
+    if(s.getScore(player1) > s.getScore(player2)){
         std::cout << "Player 1 Won\n";
     }
-    else if (gameState.getScore(player1) < gameState.getScore(player2)){
+    else if (s.getScore(player1) < s.getScore(player2)){
         std::cout << "Player 2 Won\n";
     }
     else {
@@ -40,22 +40,21 @@ void Oware::play_local_multiplayer(){
 
 void Oware::play_singleplayer(int difficulty){
     //TODO: score win condition
-    GameState gameState({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
+    GameState s({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
     constexpr int com = player2;
     constexpr int player = player1;
     while (true) {
 
-        print_board(gameState);
+        print_board(s);
         std::cout << "Your " << "turn: "; 
 
-        if(gameState.getScore(player) >= 25 || !player_turn(gameState, player)){ break; };
+        if(player_turn(s, player) == -1){ break; };
         // system("clear");
-        print_board(gameState);
-        int best_move = get_best_move(gameState, difficulty, com);
+        print_board(s);
+        int best_move = get_best_move(s, difficulty, com);
         std::cout << "COM\'s " << "turn: "; 
 
-        if(best_move == -1 || gameState.getScore(com) >= 25){ break; }
+        if(ai_turn(s, difficulty, com) == -1){ break; }
         std::cout << best_move << '\n';
-        move(gameState, com, best_move);
     }
 }

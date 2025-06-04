@@ -4,20 +4,19 @@
 #include <cstdlib>
 
 struct BenchmarkData{
-    BenchmarkData(int Winner, int Turns, double Time): winner(Winner), turns(Turns), time(Time){
-        error_state = GameState();
-        failed = false;
+    BenchmarkData(int Winner, int Turns, const double Time): winner(Winner), turns(Turns), time(Time){
+        state = GameState();
+        decided = true;
     }
-    BenchmarkData(const GameState &s): error_state(s), failed(true){
+    BenchmarkData(const GameState &s, const double Time): state(s), time(Time), decided(false){
         winner = -1;
         turns = -1;
-        time = -1;
     } 
     int winner;
     int turns;
     double time;
-    bool failed;
-    GameState error_state;
+    bool decided;
+    GameState state;
 };
 
 
@@ -28,18 +27,17 @@ BenchmarkData benchmark_com_v_random(const int seed, const int depth){
     Watch w; 
     GameState s({4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, {0, 0});
     int winner, best_move, random_move;
-    bool failed = false;
+    const int max_turns = 100;
+    bool decided = true;
     std::vector<int> legalMoves;
     int turns = 0;
     srand(seed);
     w.start();
     while (true){
-        best_move = get_best_move(s, depth, com);
-        if(best_move == -1 || s.getScore(player) >= 25 ){
+        if(ai_turn(s, depth, com) == -1){
             winner = player;
             break;
         }
-        move(s, com, best_move);
         turns ++;
 
         legalMoves = getLegalMoves(s, player);
@@ -51,35 +49,41 @@ BenchmarkData benchmark_com_v_random(const int seed, const int depth){
         move(s, player, random_move);
         turns++;
 
-        if(turns > 100) {
-            failed = true;
+        if(turns >= max_turns) {
+            decided = false;
             break;
         }
     }
-    double elapsed = w.stop();
+    const double elapsed = w.stop();
 
-    return (failed == true) ? BenchmarkData(s) : BenchmarkData(winner, turns, elapsed);
+    return (decided) ?  BenchmarkData(winner, turns, elapsed) : BenchmarkData(s,elapsed) ;
 }
 
 void log_results(const std::vector<BenchmarkData> &results){
     int com_wins = 0;
-    float game_time = 0;
-    int successful_games = results.size();
-    std::vector<GameState> failedGames;
+    float game_time_decided = 0;
+    float game_time_undecided = 0;
+    int num_decided_games = 0;
+    std::vector<GameState> undecided_games;
     for(int i = 0; i < results.size(); i++){
-        if(results[i].failed){ 
-            successful_games--; 
-            failedGames.push_back(results[i].error_state);
+        if(!results[i].decided){ 
+            game_time_undecided += results[i].time;
+            undecided_games.push_back(results[i].state);
             continue; 
+        } 
+        else {
+            num_decided_games++; 
+            game_time_decided += results[i].time;
         }
         if(results[i].winner == com) {com_wins++;}
-        game_time += results[i].time;
     }
-   float com_win_rate = 100.f * com_wins / float(successful_games);
-   float average_game_time = 100.f * game_time / float(successful_games);
+   float com_win_rate_all = 100.f * com_wins / float(results.size());
+   float average_game_time_all = 100.f * (game_time_decided + game_time_undecided)/ float(results.size());
+   float com_win_rate_decided = 100.f * com_wins / float(num_decided_games);
+   float average_game_time_decided = 100.f * game_time_decided / float(num_decided_games);
 
-   printf("Failed games:\n");
-   for(auto game : failedGames){
+   printf("Undecided games:\n");
+   for(auto game : undecided_games){
        print_board(game);
        printf("Legal moves: \n");
         
@@ -94,15 +98,17 @@ void log_results(const std::vector<BenchmarkData> &results){
        }
        printf("\n");
    }
-   printf("Successful games:\t [%d/%d]\n", successful_games, results.size());
-   printf("COM win rate:\t\t %f%%\n", com_win_rate);
-   printf("Average game time:\t %fs\n", average_game_time);
+   printf("Decided games:\t [%d/%d]\t\t\n", num_decided_games, results.size());
+   printf("COM win rate (all):\t\t %f%%\n", com_win_rate_all);
+   printf("COM win rate (decided):\t\t %f%%\n", com_win_rate_decided);
+   printf("Average game time (all):\t %fs\n", average_game_time_all);
+   printf("Average game time (decided):\t %fs\n", average_game_time_decided);
 }
 
 int main(){
     std::vector<BenchmarkData> results;
     const int n = 100;
-    const int depth = 6; 
+    const int depth = 10; 
     const int seed_base = 0;
     for(int i = 0; i < n; i++){
         system("clear");
@@ -110,6 +116,5 @@ int main(){
         results.push_back(benchmark_com_v_random(seed_base + i, depth));
     }
     log_results(results);
-
 }
 

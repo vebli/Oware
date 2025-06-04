@@ -1,6 +1,5 @@
 #include "GameLogic.hpp"
 #include "GameState.hpp"
-#include <array>
 #include <cassert>
 #include <climits>
 #include <cstdlib>
@@ -174,9 +173,13 @@ std::vector<int> getLegalMoves(const GameState &s, const int player){
 
 
 //POST: Gets user input and plays turn, returns true if move was played and false if no legal moves can be played
-bool player_turn(GameState &s, const int player){
+int player_turn(GameState &s, const int player){
     std::vector<int> legalMoves;
+    int chosen_move = -1;
 
+    if(s.getScore(player^1) >= 25){
+        return chosen_move;
+    }
 
     legalMoves = getLegalMoves(s, player);
     if(legalMoves.empty()){ 
@@ -187,14 +190,13 @@ bool player_turn(GameState &s, const int player){
             s.setSeeds(getIndex(opponent, i), 0);
         }
         s.addToScore(player, left_over);
-        return false;
+        return chosen_move;
     }
 
     
-    int chosenMove;
 
     while(true){
-        std::cin >> chosenMove;
+        std::cin >> chosen_move;
         if (std::cin.fail()){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -205,13 +207,14 @@ bool player_turn(GameState &s, const int player){
         }
     }
 
-    while (std::find(legalMoves.begin(), legalMoves.end(), chosenMove) == legalMoves.end()){
+    while (std::find(legalMoves.begin(), legalMoves.end(), chosen_move) == legalMoves.end()){
         std::cout << "Illegal Move\n";
-        std::cin >> chosenMove;
+        std::cin >> chosen_move;
     }
 
-    move(s, player, chosenMove);
-    return true;
+    move(s, player, chosen_move);
+
+    return chosen_move;
 };
 
 
@@ -276,10 +279,24 @@ int get_best_move(const GameState& s, const int depth, const int player) {
     return bestMove;
 }
 
-bool ai_turn(GameState &s, const int depth, const int com){
-    int best_move = get_best_move(s, depth, com);
-    if(s.getScore(com) >= 25 || best_move == -1){
-        return false;
+int ai_turn(GameState &s, const int depth, const int com){
+    int best_move = -1;
+    if(s.getScore(com^1) >= 25){
+        return best_move;
     }
-    return true;
+    best_move = get_best_move(s, depth, com);
+    if(best_move == -1){
+        int opponent = com ^ 1;
+        int left_over = 0;
+        for(int i = 1; i <= 6; i++){
+            left_over += s.getSeeds(getIndex(opponent, i));
+            s.setSeeds(getIndex(opponent, i), 0);
+        }
+        s.addToScore(com, left_over);
+    }
+    else{
+        move(s, com, best_move);
+    }
+    return best_move;
+
 }
