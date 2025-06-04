@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include <future>
 
 
 const std::vector<std::string> boardTemplate = {
@@ -301,34 +302,74 @@ int minimax_alpha_beta(const GameState s, int depth, int alpha, int beta, int pl
     }
 }
 
-int get_best_move(const GameState& s, const int depth, const int player) {
+int get_best_move(const GameState& s, const bool run_parallel, const int depth, const int player) {
+    // const unsigned int num_of_threads = std::thread::hardware_concurrency();
     int bestScore = player ? INT_MIN : INT_MAX;
     int bestMove = -1;
     const int opponent = player ^ 1;
 
-    for (int curr_move : getLegalMoves(s, player)) {
-        GameState child(s);
-        move(child, player, curr_move);
-        int score = minimax_alpha_beta(child, depth - 1, INT_MIN, INT_MAX, opponent);
+    auto legalMoves = getLegalMoves(s, player);
 
-        if (player && score > bestScore) {
-            bestScore = score;
-            bestMove = curr_move;
-        } else if (!player && score < bestScore) {
-            bestScore = score;
-            bestMove = curr_move;
+    if (run_parallel){
+        std::vector<GameState> children(legalMoves.size());
+        for (int i = 0; i < legalMoves.size(); i++){
+            GameState child(s);
+            move(child, player, legalMoves[i]);
+            children[i] = child;
         }
-    }
+        std::vector<std::future<int>> threads(legalMoves.size()); //adjust for num of threads 
+        for (int i = 0; i < threads.size(); i++){
+            threads[i] = std::async(std::launch::async, minimax_alpha_beta, children[i], depth -1, INT_MIN, INT_MAX, opponent);
+        }
 
-    return bestMove;
+        int best_score = player ? INT_MIN : INT_MAX;
+        int best_score_index = 0;
+        int score;
+        for (int i = 0; i < threads.size(); i++){
+            if(player){
+                score = threads[i].get();
+                if(score > best_score){
+                    best_score = score;
+                    best_score_index = i;
+                }
+            }
+            else{
+                score = threads[i].get();
+                if(score < best_score){
+                    best_score = score;
+                    best_score_index = i;
+                }
+            }
+        }
+
+        return legalMoves[best_score_index];
+
+    }
+    else {
+        for (int curr_move : legalMoves) {
+            GameState child(s);
+            move(child, player, curr_move);
+            int score = minimax_alpha_beta(child, depth - 1, INT_MIN, INT_MAX, opponent);
+
+            if (player && score > bestScore) {
+                bestScore = score;
+                bestMove = curr_move;
+            } else if (!player && score < bestScore) {
+                bestScore = score;
+                bestMove = curr_move;
+            }
+        }
+
+        return bestMove;
+    }
 }
 
-int ai_turn(GameState &s, const int depth, const int com){
+int ai_turn(GameState &s, const bool run_parallel, const int depth, const int com){
     int best_move = -1;
     if(s.getScore(com^1) >= 25){
         return best_move;
     }
-    best_move = get_best_move(s, depth, com);
+    best_move = get_best_move(s, false, depth, com);
     if(best_move == -1){
         int opponent = com ^ 1;
         int left_over = 0;

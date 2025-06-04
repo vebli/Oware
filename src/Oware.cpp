@@ -51,10 +51,10 @@ void Oware::play_singleplayer(int difficulty){
         if(player_turn(s, player) == -1){ break; };
         // system("clear");
         print_board(s);
-        int best_move = get_best_move(s, difficulty, com);
         std::cout << "COM\'s " << "turn: "; 
 
-        if(ai_turn(s, difficulty, com) == -1){ break; }
-        std::cout << best_move << '\n';
+        const int ai_move = ai_turn(s, false, difficulty, com); 
+        if(ai_move == -1){ break; }
+        std::cout << ai_move << '\n';
     }
 }

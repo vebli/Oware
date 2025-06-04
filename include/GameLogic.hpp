@@ -24,5 +24,5 @@ bool canGiveToOpponent(GameState &s, int player);
 std::vector<int> getForcedMoves(GameState &s, int player);
 int player_turn(GameState &s, int player);
 int minimax(const GameState s, int depth, int player);
-int get_best_move(const GameState& s, const int depth, const int player); 
-int ai_turn(GameState &s, const int depth, const int com);
+int get_best_move(const GameState& s, const bool run_parallel, const int depth, const int player); 
+int ai_turn(GameState &s, const bool run_parallel, const int depth, const int com);
