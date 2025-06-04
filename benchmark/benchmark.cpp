@@ -84,8 +84,7 @@ void log_results(const std::vector<BenchmarkData> &results) {
   float com_win_rate_all = 100.f * com_wins / float(results.size());
   float average_game_time_all = 100.f * total_game_time / float(results.size());
   float com_win_rate_decided = 100.f * com_wins / float(num_decided_games);
-  float average_game_time_decided =
-      100.f * game_time_decided / float(num_decided_games);
+  float average_game_time_decided = 100.f * game_time_decided / float(num_decided_games);
 
   // printf("Undecided games:\n");
   // for(auto game : undecided_games){
@@ -103,7 +102,7 @@ void log_results(const std::vector<BenchmarkData> &results) {
   //     }
   //     printf("\n");
   // }
-  printf("Total time:\t\t\t%f\n", total_game_time);
+  printf("Total time:\t\t\t%f\ns", total_game_time);
   printf("Decided games:\t\t\t[%d/%d]\n", num_decided_games, results.size());
   printf("COM win rate (all):\t\t%f%%\n", com_win_rate_all);
   printf("COM win rate (decided):\t\t%f%%\n", com_win_rate_decided);
@@ -122,17 +121,18 @@ int main(int argc, char *argv[]) {
   run_parallel = (strcmp(argv[2], "p") == 0) ? true : false;
 
   std::vector<BenchmarkData> results;
-  const int n = 100;
+  const int n = 500;
   const int seed_base = 0;
-  const int turn_cap = 150;
+  const int turn_cap = 200;
   for (int i = 0; i < n; i++) {
     // system("clear");
     // printf("Running benchmark [%d/%d]\n", i+1, n);
     results.push_back(benchmark_com_v_random(seed_base + i, false, depth, turn_cap));
   }
+
   log_results(results);
   printf("Depth:\t\t\t\t%d\n", depth);
-  printf("Ran in:\t\t\t\t%s\n", run_parallel ? "parallel" : "serial");
   printf("Turn cap:\t\t\t%d\n",turn_cap); 
+  printf("Ran in:\t\t\t\t%s\n", run_parallel ? "parallel" : "serial");
   printf("----------------------------------------\n");
 }

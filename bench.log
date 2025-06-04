@@ -1,159 +1,159 @@
-Total time:			0.026363
-Decided games:			[59/100]
-COM win rate (all):		32.000000%
-COM win rate (decided):		54.237289%
-Average game time (all):	0.026363s
-Average game time (decided):	0.021899s
+Total time:			0.023882
+Decided games:			[74/100]
+COM win rate (all):		49.000000%
+COM win rate (decided):		66.216217%
+Average game time (all):	0.023882s
+Average game time (decided):	0.020605s
 Depth:				1
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			0.071954
+Total time:			0.071174
 Decided games:			[81/100]
 COM win rate (all):		65.000000%
 COM win rate (decided):		80.246910%
-Average game time (all):	0.071954s
-Average game time (decided):	0.063283s
+Average game time (all):	0.071174s
+Average game time (decided):	0.062678s
 Depth:				2
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			0.263876
-Decided games:			[80/100]
-COM win rate (all):		49.000000%
-COM win rate (decided):		61.250000%
-Average game time (all):	0.263876s
-Average game time (decided):	0.235520s
+Total time:			0.249947
+Decided games:			[86/100]
+COM win rate (all):		67.000000%
+COM win rate (decided):		77.906975%
+Average game time (all):	0.249947s
+Average game time (decided):	0.225952s
 Depth:				3
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			0.607140
+Total time:			0.606325
 Decided games:			[83/100]
 COM win rate (all):		70.000000%
 COM win rate (decided):		84.337349%
-Average game time (all):	0.607140s
-Average game time (decided):	0.538568s
+Average game time (all):	0.606325s
+Average game time (decided):	0.537903s
 Depth:				4
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			1.591879
+Total time:			1.535259
 Decided games:			[81/100]
-COM win rate (all):		56.000000%
-COM win rate (decided):		69.135803%
-Average game time (all):	1.591879s
-Average game time (decided):	1.417165s
+COM win rate (all):		69.000000%
+COM win rate (decided):		85.185188%
+Average game time (all):	1.535259s
+Average game time (decided):	1.348293s
 Depth:				5
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			3.183237
+Total time:			3.186483
 Decided games:			[84/100]
 COM win rate (all):		76.000000%
 COM win rate (decided):		90.476189%
-Average game time (all):	3.183237s
-Average game time (decided):	2.861131s
+Average game time (all):	3.186483s
+Average game time (decided):	2.864243s
 Depth:				6
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			7.447831
-Decided games:			[82/100]
-COM win rate (all):		56.000000%
-COM win rate (decided):		68.292686%
-Average game time (all):	7.447832s
-Average game time (decided):	6.702019s
+Total time:			7.269175
+Decided games:			[85/100]
+COM win rate (all):		77.000000%
+COM win rate (decided):		90.588234%
+Average game time (all):	7.269175s
+Average game time (decided):	6.589553s
 Depth:				7
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			14.941269
+Total time:			15.158852
 Decided games:			[82/100]
 COM win rate (all):		75.000000%
 COM win rate (decided):		91.463417%
-Average game time (all):	14.941270s
-Average game time (decided):	13.170087s
+Average game time (all):	15.158852s
+Average game time (decided):	13.363361s
 Depth:				8
 Ran in:				serial
 Turn cap:			150
 ----------------------------------------
-Total time:			0.026132
-Decided games:			[59/100]
-COM win rate (all):		32.000000%
-COM win rate (decided):		54.237289%
-Average game time (all):	0.026132s
-Average game time (decided):	0.021722s
+Total time:			0.023564
+Decided games:			[74/100]
+COM win rate (all):		49.000000%
+COM win rate (decided):		66.216217%
+Average game time (all):	0.023564s
+Average game time (decided):	0.020267s
 Depth:				1
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			0.072205
+Total time:			0.071549
 Decided games:			[81/100]
 COM win rate (all):		65.000000%
 COM win rate (decided):		80.246910%
-Average game time (all):	0.072205s
-Average game time (decided):	0.063477s
+Average game time (all):	0.071549s
+Average game time (decided):	0.062888s
 Depth:				2
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			0.264969
-Decided games:			[80/100]
-COM win rate (all):		49.000000%
-COM win rate (decided):		61.250000%
-Average game time (all):	0.264969s
-Average game time (decided):	0.236426s
+Total time:			0.250607
+Decided games:			[86/100]
+COM win rate (all):		67.000000%
+COM win rate (decided):		77.906975%
+Average game time (all):	0.250607s
+Average game time (decided):	0.226326s
 Depth:				3
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			0.611934
+Total time:			0.611711
 Decided games:			[83/100]
 COM win rate (all):		70.000000%
 COM win rate (decided):		84.337349%
-Average game time (all):	0.611934s
-Average game time (decided):	0.542868s
+Average game time (all):	0.611711s
+Average game time (decided):	0.542622s
 Depth:				4
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			1.584862
+Total time:			1.526650
 Decided games:			[81/100]
-COM win rate (all):		56.000000%
-COM win rate (decided):		69.135803%
-Average game time (all):	1.584862s
-Average game time (decided):	1.410976s
+COM win rate (all):		69.000000%
+COM win rate (decided):		85.185188%
+Average game time (all):	1.526650s
+Average game time (decided):	1.339647s
 Depth:				5
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			3.209679
+Total time:			3.178764
 Decided games:			[84/100]
 COM win rate (all):		76.000000%
 COM win rate (decided):		90.476189%
-Average game time (all):	3.209679s
-Average game time (decided):	2.885249s
+Average game time (all):	3.178764s
+Average game time (decided):	2.857107s
 Depth:				6
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			7.444726
-Decided games:			[82/100]
-COM win rate (all):		56.000000%
-COM win rate (decided):		68.292686%
-Average game time (all):	7.444726s
-Average game time (decided):	6.698692s
+Total time:			7.321257
+Decided games:			[85/100]
+COM win rate (all):		77.000000%
+COM win rate (decided):		90.588234%
+Average game time (all):	7.321257s
+Average game time (decided):	6.633887s
 Depth:				7
 Ran in:				parallel
 Turn cap:			150
 ----------------------------------------
-Total time:			15.102398
+Total time:			15.091296
 Decided games:			[82/100]
 COM win rate (all):		75.000000%
 COM win rate (decided):		91.463417%
-Average game time (all):	15.102398s
-Average game time (decided):	13.313190s
+Average game time (all):	15.091296s
+Average game time (decided):	13.300189s
 Depth:				8
 Ran in:				parallel
 Turn cap:			150

@@ -219,10 +219,10 @@ int player_turn(GameState &s, const int player){
 };
 
 
-int minimax(const GameState s, int depth, int player){
+int minimax(const GameState s, int depth, int max_player, int player){
     if(depth == 0) { 
-        const int max_player_score = s.getScore(player);
-        const int min_player_score = s.getScore(player ^ 1);
+        const int max_player_score = s.getScore(max_player);
+        const int min_player_score = s.getScore(max_player ^ 1);
         if (max_player_score >= 25 && min_player_score < 25){
             return 1;
         }
@@ -234,14 +234,14 @@ int minimax(const GameState s, int depth, int player){
         }
 
     }
-    if(player) {
+    if(player == max_player) {
         int max = INT_MIN;
         const int opponent = player ^ 1;
 
         for (auto curr_move : getLegalMoves(s, player)){
             GameState child(s);
             move(child, player, curr_move);
-            max = std::max(minimax(child, depth-1, opponent), max);
+            max = std::max(minimax(child, depth-1, max_player, opponent), max);
         }
         return max;
     }
@@ -252,15 +252,15 @@ int minimax(const GameState s, int depth, int player){
         for (auto curr_move : getLegalMoves(s, player)){
             GameState child(s);
             move(child, player, curr_move);
-            min = std::min(minimax(child, depth-1, opponent), min);
+            min = std::min(minimax(child, depth-1, max_player, opponent), min);
         }
         return min;
     }
 }
-int minimax_alpha_beta(const GameState s, int depth, int alpha, int beta, int player){
+int minimax_alpha_beta(const GameState s, const int depth, int alpha, int beta, const int max_player, const int player){
     if(depth == 0) { 
-        const int max_player_score = s.getScore(player);
-        const int min_player_score = s.getScore(player ^ 1);
+        const int max_player_score = s.getScore(max_player);
+        const int min_player_score = s.getScore(max_player ^ 1);
         if (max_player_score >= 25 && min_player_score < 25){
             return 1;
         }
@@ -272,13 +272,13 @@ int minimax_alpha_beta(const GameState s, int depth, int alpha, int beta, int pl
         }
 
     }
-    if(player) {
+    if(player == max_player) {
         int max = INT_MIN;
 
         for (auto curr_move : getLegalMoves(s, player)){
             GameState child(s);
             move(child, player, curr_move);
-            max = std::max(minimax_alpha_beta(child, depth-1, alpha, beta, false), max);
+            max = std::max(minimax_alpha_beta(child, depth-1, alpha, beta, max_player, player ^ 1), max);
             alpha = std::max(alpha, max);
             if(alpha >= beta){ 
                 return alpha; 
@@ -292,7 +292,7 @@ int minimax_alpha_beta(const GameState s, int depth, int alpha, int beta, int pl
         for (auto curr_move : getLegalMoves(s, player)){
             GameState child(s);
             move(child, player, curr_move);
-            min = std::min(minimax_alpha_beta(child, depth-1, alpha, beta, true), min);
+            min = std::min(minimax_alpha_beta(child, depth-1, alpha, beta, max_player, player ^1), min);
             beta = std::min(beta, min);
             if(beta <= alpha){ 
                 return beta; 
@@ -319,7 +319,7 @@ int get_best_move(const GameState& s, const bool run_parallel, const int depth, 
         }
         std::vector<std::future<int>> threads(legalMoves.size()); //adjust for num of threads 
         for (int i = 0; i < threads.size(); i++){
-            threads[i] = std::async(std::launch::async, minimax_alpha_beta, children[i], depth -1, INT_MIN, INT_MAX, opponent);
+            threads[i] = std::async(std::launch::async, minimax_alpha_beta, children[i], depth -1, INT_MIN, INT_MAX, player, opponent);
         }
 
         int best_score = player ? INT_MIN : INT_MAX;
@@ -349,7 +349,7 @@ int get_best_move(const GameState& s, const bool run_parallel, const int depth, 
         for (int curr_move : legalMoves) {
             GameState child(s);
             move(child, player, curr_move);
-            int score = minimax_alpha_beta(child, depth - 1, INT_MIN, INT_MAX, opponent);
+            int score = minimax_alpha_beta(child, depth - 1, INT_MIN, INT_MAX, player, opponent);
 
             if (player && score > bestScore) {
                 bestScore = score;
