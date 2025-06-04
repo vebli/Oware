@@ -82,22 +82,22 @@ void log_results(const std::vector<BenchmarkData> &results){
    float com_win_rate_decided = 100.f * com_wins / float(num_decided_games);
    float average_game_time_decided = 100.f * game_time_decided / float(num_decided_games);
 
-   printf("Undecided games:\n");
-   for(auto game : undecided_games){
-       print_board(game);
-       printf("Legal moves: \n");
-        
-       printf("Player 1: ");
-       for(int legalMove : getLegalMoves(game, player1)){
-           printf("%d ", legalMove);
-       }
-       printf("\n");
-       printf("Player 2: ");
-       for(int legalMove : getLegalMoves(game, player2)){
-           printf("%d ", legalMove);
-       }
-       printf("\n");
-   }
+   // printf("Undecided games:\n");
+   // for(auto game : undecided_games){
+   //     print_board(game);
+   //     printf("Legal moves: \n");
+   //
+   //     printf("Player 1: ");
+   //     for(int legalMove : getLegalMoves(game, player1)){
+   //         printf("%d ", legalMove);
+   //     }
+   //     printf("\n");
+   //     printf("Player 2: ");
+   //     for(int legalMove : getLegalMoves(game, player2)){
+   //         printf("%d ", legalMove);
+   //     }
+   //     printf("\n");
+   // }
    printf("Decided games:\t [%d/%d]\t\t\n", num_decided_games, results.size());
    printf("COM win rate (all):\t\t %f%%\n", com_win_rate_all);
    printf("COM win rate (decided):\t\t %f%%\n", com_win_rate_decided);

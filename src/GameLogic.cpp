@@ -220,8 +220,8 @@ int player_turn(GameState &s, const int player){
 
 int minimax(const GameState s, int depth, int player){
     if(depth == 0) { 
-        int max_player_score = s.getScore(player);
-        int min_player_score = s.getScore(player ^ 1);
+        const int max_player_score = s.getScore(player);
+        const int min_player_score = s.getScore(player ^ 1);
         if (max_player_score >= 25 && min_player_score < 25){
             return 1;
         }
@@ -256,6 +256,50 @@ int minimax(const GameState s, int depth, int player){
         return min;
     }
 }
+int minimax_alpha_beta(const GameState s, int depth, int alpha, int beta, int player){
+    if(depth == 0) { 
+        const int max_player_score = s.getScore(player);
+        const int min_player_score = s.getScore(player ^ 1);
+        if (max_player_score >= 25 && min_player_score < 25){
+            return 1;
+        }
+        else if (max_player_score < 25 && min_player_score >= 25){
+            return -1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+    if(player) {
+        int max = INT_MIN;
+
+        for (auto curr_move : getLegalMoves(s, player)){
+            GameState child(s);
+            move(child, player, curr_move);
+            max = std::max(minimax_alpha_beta(child, depth-1, alpha, beta, false), max);
+            alpha = std::max(alpha, max);
+            if(alpha >= beta){ 
+                return alpha; 
+            }
+        }
+        return max;
+    }
+    else {
+        int min = INT_MAX;
+
+        for (auto curr_move : getLegalMoves(s, player)){
+            GameState child(s);
+            move(child, player, curr_move);
+            min = std::min(minimax_alpha_beta(child, depth-1, alpha, beta, true), min);
+            beta = std::min(beta, min);
+            if(beta <= alpha){ 
+                return beta; 
+            }
+        }
+        return min;
+    }
+}
 
 int get_best_move(const GameState& s, const int depth, const int player) {
     int bestScore = player ? INT_MIN : INT_MAX;
@@ -265,7 +309,7 @@ int get_best_move(const GameState& s, const int depth, const int player) {
     for (int curr_move : getLegalMoves(s, player)) {
         GameState child(s);
         move(child, player, curr_move);
-        int score = minimax(child, depth - 1, opponent);
+        int score = minimax_alpha_beta(child, depth - 1, INT_MIN, INT_MAX, opponent);
 
         if (player && score > bestScore) {
             bestScore = score;
